@@ -1,4 +1,9 @@
-function Form() {
+import React from 'react';
+
+interface Props {
+  onCancel: () => void;
+}
+function Form({ onCancel }: Props) {
   return (
     <form>
       <label>
@@ -17,9 +22,8 @@ function Form() {
         URL
         <input type="text" name="URL" />
       </label>
-
       <button>Cadastrar</button>
-      <button>Cancelar</button>
+      <button onClick={ onCancel }>Cancelar</button>
     </form>
   );
 }
