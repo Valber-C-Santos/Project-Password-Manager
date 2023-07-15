@@ -4,12 +4,18 @@ interface Props {
   onCancel: () => void,
   handleClickPassword: () => void
 }
-function Form({ onCancel, handleClickPassword }: Props) {
+function Form({ onCancel }: Props) {
   const [nameServ, setNameServ] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [url, setUrl] = useState('');
-  const [btnDisable, SetbtnDisable] = useState(true);
+  const [btnDisable, setbtnDisable] = useState(true);
+  const [hasEight, setHasEight] = useState(false);
+  const [hasSixteen, setHasSixteen] = useState(false);
+  const [hasLetter, setHasLetter] = useState(false);
+  const [hasSpecial, setHasSpecial] = useState(false);
+  const validClass = 'valid-password-check';
+  const invalidClass = 'invalid-password-check';
 
   function resetForm() {
     setNameServ('');
@@ -37,13 +43,39 @@ function Form({ onCancel, handleClickPassword }: Props) {
   }
 
   function handleInfos() {
-    const regex = /^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,16}$/;
-    const validPassword = regex.test(password);
+    const hasLettersAndNumbers = /[a-zA-Z]/.test(password) && /\d/.test(password);
+    const hasSpecialCharacter = /[!@#$%^&*(),.?":{}|<>]/.test(password);
+    const hasAtLeastEight = password.length >= 8;
+    const hasLessThanSixteen = hasAtLeastEight && password.length < 16;
+    const validPassword = hasLettersAndNumbers
+      && hasSpecialCharacter
+      && hasAtLeastEight
+      && hasLessThanSixteen;
+    if (hasAtLeastEight) {
+      setHasEight(true);
+    } else {
+      setHasEight(false);
+    }
+    if (hasLessThanSixteen) {
+      setHasSixteen(true);
+    } else {
+      setHasSixteen(false);
+    }
+    if (hasLettersAndNumbers) {
+      setHasLetter(true);
+    } else {
+      setHasLetter(false);
+    }
+    if (hasSpecialCharacter) {
+      setHasSpecial(true);
+    } else {
+      setHasSpecial(false);
+    }
 
     if (nameServ !== '' && email !== '' && password !== '' && validPassword) {
-      SetbtnDisable(false);
+      setbtnDisable(false);
     } else {
-      SetbtnDisable(true);
+      setbtnDisable(true);
     }
   }
 
@@ -87,6 +119,18 @@ function Form({ onCancel, handleClickPassword }: Props) {
       </label>
       <button disabled={ btnDisable }>Cadastrar</button>
       <button onClick={ onCancel }>Cancelar</button>
+      <p className={ hasEight ? validClass : invalidClass }>
+        Possuir 8 ou mais caracteres
+      </p>
+      <p className={ hasSixteen ? validClass : invalidClass }>
+        Possuir até 16 caracteres
+      </p>
+      <p className={ hasLetter ? validClass : invalidClass }>
+        Possuir letras e números
+      </p>
+      <p className={ hasSpecial ? validClass : invalidClass }>
+        Possuir algum caractere especial
+      </p>
     </form>
   );
 }
