@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 
 interface Props {
   onCancel: () => void,
-  handleClickPassword: () => void
 }
 function Form({ onCancel }: Props) {
   const [nameServ, setNameServ] = useState('');
@@ -17,12 +16,6 @@ function Form({ onCancel }: Props) {
   const validClass = 'valid-password-check';
   const invalidClass = 'invalid-password-check';
 
-  function resetForm() {
-    setNameServ('');
-    setEmail('');
-    setPassword('');
-    setUrl('');
-  }
   function handleChangeNameServ(event: React.ChangeEvent<HTMLInputElement>) {
     setNameServ(event.target.value);
     handleInfos();
