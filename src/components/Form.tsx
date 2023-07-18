@@ -23,6 +23,7 @@ function Form({ handleState }: ProphandleState) {
   const [objList, setObjList] = useState<InputProps[]>([]);
   const [regist, setRegist] = useState(true);
   const [genericState, setGenericState] = useState<InputProps>(inital);
+  const [hiddenSenha, setHiddenSenha] = useState(false);
 
   const handleInput = ({ target: { name, value } }: any) => {
     const SaveData = {
@@ -31,6 +32,27 @@ function Form({ handleState }: ProphandleState) {
     };
     setGenericState(SaveData);
     verifyData(genericState);
+  };
+
+  const handleHiddenSenha = () => {
+    setHiddenSenha(!hiddenSenha);
+  };
+
+  const renderLista = () => {
+    return objList.map((service, indice) => (
+      <li key={ indice }>
+        <a target="_blank" href={ service.url } rel="noreferrer">{ service.name }</a>
+        <h5>{hiddenSenha ? '******' : service.password }</h5>
+        <h5>{service.login}</h5>
+        <button
+          data-testid="remove-btn"
+          onClick={ () => handleApaga(indice) }
+        >
+          X
+
+        </button>
+      </li>
+    ));
   };
 
   const verifyData = (data: any) => {
@@ -111,6 +133,15 @@ function Form({ handleState }: ProphandleState) {
       </label>
       <button disabled={ regist } onClick={ handleCadastro }>Cadastrar</button>
       <button onClick={ handleState }>Cancelar</button>
+      <label htmlFor="hidden">
+        Esconder senhas
+        <input
+          type="checkbox"
+          id="hidden"
+          checked={ hiddenSenha }
+          onChange={ handleHiddenSenha }
+        />
+      </label>
       <article>
         {characterSpecial.test(genericState.password)
           && <h5 className="valid-password-check">Possuir algum caractere especial</h5>}
@@ -134,20 +165,7 @@ function Form({ handleState }: ProphandleState) {
       {cadastro === true && (
         <>
           <ol>
-            {objList.map((data, indice) => (
-              <li key={ indice }>
-                <a target="_blank" href={ data.url } rel="noreferrer">{ data.name }</a>
-                <h5>{data.password}</h5>
-                <h5>{data.login}</h5>
-                <button
-                  data-testid="remove-btn"
-                  onClick={ () => handleApaga(indice) }
-                >
-                  X
-
-                </button>
-              </li>
-            ))}
+            {renderLista()}
           </ol>
           <button onClick={ () => setCadastro(false) }>Cadastrar nova senha</button>
         </>
